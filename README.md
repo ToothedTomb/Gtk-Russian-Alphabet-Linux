@@ -7,4 +7,6 @@ pyinstaller --onefile main.py
 
 Download precompiled for Linux - https://jonathan-linux.itch.io/gtk-russian-alphabet
 
+Note: You may need to install mpg123 to your system...
+
 Thanks Jonathan Steadman.
