@@ -2,7 +2,7 @@ import gi
 from gtts import gTTS
 import os
 import subprocess  # Use subprocess to ensure synchronous execution
-
+from gi.repository import Pango
 # GTK version requirement
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -26,6 +26,7 @@ key_map = {
     'Г': 'Г',
     'Д': 'Д',
     'Е': 'Е',
+    'Ё': 'Ё',
     'Ж': 'Ж',
     'З': 'З',
     'И': 'И',
@@ -44,12 +45,7 @@ key_map = {
     'Х': 'Х',
     'Ц': 'Ц',
     'Ч': 'Ч',
-    'Ш': import shutil
-
-# Check if mpg123 is installed
-if shutil.which("mpg123") is None:
-    print("Error: mpg123 is not installed. Please install mpg123 to use this application.")
-    exit(1)'Ш',
+    'Ш': 'Ш',
     'Щ': 'Щ',
     'Ъ': '',  # Silent hard sign
     'Ы': 'Ы',
@@ -64,37 +60,24 @@ class RussianAlphabetApp(Gtk.Window):
     def __init__(self):
         super().__init__(title="Gtk - Russian Alphabet!")
         self.set_border_width(10)
-        self.set_resizable(False)  # Prevent window resizing
+        self.set_resizable(False)
 
         grid = Gtk.Grid()
         self.add(grid)
 
         row, col = 0, 0
+        max_cols = 8  # Adjust this value to fit all letters evenly
+
         for letter in key_map:
             button = Gtk.Button(label=letter)
-            button.set_size_request(100, 100)  # Increase button size (width, height)
-            
-            # Set the font size of the button text
-            button.get_style_context().add_class("big-font")
-
+            button.set_size_request(50, 50)  # Set button size
+            button.modify_font(Pango.FontDescription("50"))  # Set font size directly on the button
             button.connect("clicked", on_button_click, letter)
             grid.attach(button, col, row, 1, 1)
             col += 1
-            if col > 7:  # Adjust for button layout
+            if col >= max_cols:  # Move to the next row when reaching max columns
                 col = 0
                 row += 1
-
-        # Adding custom CSS to set larger font size for buttons
-        style_provider = Gtk.CssProvider()
-        style_provider.load_from_data(b"""
-        button.big-font {
-            font-size: 90px;  /* Adjust the font size here */
-            font-weight: bold;
-        }
-        """)
-        Gtk.StyleContext.add_provider_for_screen(
-            self.get_screen(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
 
 if __name__ == "__main__":
     app = RussianAlphabetApp()
